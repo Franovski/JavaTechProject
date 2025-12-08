@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.graphics.GraphicsController"
+            prefWidth="1400" prefHeight="800">
+
+    <!-- Top Title -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="topbar-modern" prefHeight="70">
+            <padding>
+                <Insets top="15" left="30" bottom="15" right="30"/>
+            </padding>
+            <Button text="← Back to Dashboard" onAction="#backToMain" styleClass="logout-btn"/>
+            <Label text="📊 Event Analytics" styleClass="brand-title"/>
+            <Button text="Refresh" onAction="#onRefresh" styleClass="action-btn"/>
+        </HBox>
+    </top>
+
+    <!-- Center Content -->
+    <center>
+        <HBox spacing="20">
+            <padding>
+                <Insets top="20" left="20" bottom="20" right="20"/>
+            </padding>
+
+            <!-- Left Charts -->
+            <VBox spacing="30" prefWidth="400">
+                <Label text="Event Status Distribution" styleClass="section-title"/>
+                <PieChart fx:id="statusPieChart" prefHeight="300"/>
+
+                <Label text="Events per Category" styleClass="section-title"/>
+                <BarChart fx:id="categoryBarChart" prefHeight="300" prefWidth="400">
+                    <xAxis>
+                        <CategoryAxis label="Category"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Number of Events"/>
+                    </yAxis>
+                </BarChart>
+            </VBox>
+
+            <!-- Center 3D Scene -->
+            <StackPane fx:id="subSceneContainer" prefWidth="600" prefHeight="600"
+                       style="-fx-background-color: #f4f4f4; -fx-border-color: #ccc; -fx-border-width: 1;"/>
+
+            <!-- Right Summary -->
+            <VBox spacing="20" prefWidth="300">
+                <VBox styleClass="overview-card" alignment="CENTER" spacing="5">
+                    <Label text="Total Events" styleClass="card-title"/>
+                    <Label fx:id="totalEventsLabel" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="overview-card" alignment="CENTER" spacing="5">
+                    <Label text="Total Capacity" styleClass="card-title"/>
+                    <Label fx:id="totalCapacityLabel" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="overview-card" alignment="CENTER" spacing="5">
+                    <Label text="Upcoming Events" styleClass="card-title"/>
+                    <Label fx:id="upcomingEventsLabel" text="0" styleClass="card-value"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controllers.LoginController"
+            prefWidth="900" prefHeight="560">
+    <children>
+        <StackPane AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+                   AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+                   styleClass="auth-surface">
+            <children>
+                <VBox spacing="25" alignment="CENTER">
+                    <Label text="🎫 TicketBox Login" styleClass="auth-title"/>
+                    <Label text="Sign in to manage your events" styleClass="auth-subtitle"/>
+                    <VBox spacing="15" maxWidth="400" styleClass="auth-card">
+                        <TextField fx:id="username" promptText="Username" styleClass="auth-field"/>
+                        <PasswordField fx:id="password" promptText="••••••••" styleClass="auth-field"/>
+                        <Button text="Sign In" onAction="#onLogin" styleClass="auth-btn"/>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Hyperlink text="Forgot password?" onAction="#goForgot" styleClass="auth-link"/>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="5">
+                            <Label text="Don't have an account?" styleClass="auth-subtext"/>
+                            <Hyperlink text="Create account" onAction="#goRegister" styleClass="auth-link"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </children>
+        </StackPane>
+    </children>
+</AnchorPane>
+
+

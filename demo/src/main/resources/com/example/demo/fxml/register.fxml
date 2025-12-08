@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controllers.RegisterController"
+            prefWidth="900" prefHeight="560">
+
+    <children>
+        <StackPane styleClass="auth-surface"
+                   AnchorPane.topAnchor="0"
+                   AnchorPane.bottomAnchor="0"
+                   AnchorPane.leftAnchor="0"
+                   AnchorPane.rightAnchor="0">
+            <children>
+                <VBox spacing="25" alignment="CENTER">
+                    <Label text="✨ Create Account" styleClass="auth-title"/>
+                    <Label text="Start managing your events" styleClass="auth-subtitle"/>
+
+                    <VBox spacing="15" maxWidth="400" styleClass="auth-card">
+                        <TextField fx:id="username" promptText="Username" styleClass="auth-field"/>
+                        <TextField fx:id="email" promptText="Email" styleClass="auth-field"/>
+                        <PasswordField fx:id="password" promptText="Password" styleClass="auth-field"/>
+                        <PasswordField fx:id="confirmPassword" promptText="Confirm Password" styleClass="auth-field"/>
+
+                        <!-- Removed role ComboBox since all new users = CUSTOMER -->
+
+                        <Button text="Create Account" onAction="#onRegister" styleClass="auth-btn"/>
+                        <HBox alignment="CENTER" spacing="5">
+                            <Label text="Already have an account?" styleClass="auth-subtext"/>
+                            <Hyperlink text="Sign in" onAction="#goLogin" styleClass="auth-link"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </children>
+        </StackPane>
+    </children>
+</AnchorPane>

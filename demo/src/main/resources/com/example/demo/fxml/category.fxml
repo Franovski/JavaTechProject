@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controllers.CategoryController"
+            prefWidth="1180" prefHeight="720">
+
+    <!-- ===== Top Bar ===== -->
+    <top>
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="topbar-modern">
+            <children>
+                <Button text="← Back to Dashboard" onAction="#backToMain" styleClass="logout-btn"/>
+                <Label text="Category Management" styleClass="brand-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Logout" onAction="#onLogout" styleClass="logout-btn"/>
+            </children>
+        </HBox>
+    </top>
+
+    <!-- ===== Center Content ===== -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="main-scroll">
+            <content>
+                <VBox spacing="25" alignment="TOP_CENTER" style="-fx-padding: 30;">
+                    <children>
+                        <VBox spacing="16" styleClass="table-card" alignment="CENTER">
+                            <Label text="Categories" styleClass="section-title"/>
+
+                            <TableView fx:id="categoryTable" prefHeight="400" styleClass="custom-table">
+                                <columns>
+                                    <TableColumn fx:id="categoryIdColumn" text="ID" prefWidth="80"/>
+                                    <TableColumn fx:id="categoryNameColumn" text="Name" prefWidth="320"/>
+                                </columns>
+                            </TableView>
+
+                            <GridPane hgap="12" vgap="10" style="-fx-padding: 10;">
+                                <columnConstraints>
+                                    <ColumnConstraints percentWidth="25"/>
+                                    <ColumnConstraints percentWidth="25"/>
+                                    <ColumnConstraints percentWidth="25"/>
+                                    <ColumnConstraints percentWidth="25"/>
+                                </columnConstraints>
+
+                                <children>
+                                    <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                                           styleClass="auth-subtitle"/>
+
+                                    <TextField fx:id="categoryNameField" promptText="Category Name"
+                                               styleClass="custom-field"
+                                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                                    <Button text="Add Category" onAction="#onAddCategory"
+                                            styleClass="primary-btn"
+                                            GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                                    <Button text="Update Category" onAction="#onUpdateCategory"
+                                            styleClass="secondary-btn"
+                                            GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                                    <Button text="Delete Category" onAction="#onDeleteCategory"
+                                            styleClass="danger-btn"
+                                            GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                                </children>
+                            </GridPane>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

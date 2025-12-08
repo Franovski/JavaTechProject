@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controllers.EventController"
+            prefWidth="1280" prefHeight="800"
+            styleClass="root">
+
+    <!-- ===== Top Bar ===== -->
+    <top>
+        <HBox spacing="16" alignment="CENTER_LEFT" styleClass="topbar-modern">
+            <children>
+                <Button text="← Back to Dashboard" onAction="#backToMain" styleClass="logout-btn"/>
+                <Label text="Event Management" styleClass="brand-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Logout" onAction="#onLogout" styleClass="logout-btn"/>
+            </children>
+        </HBox>
+    </top>
+
+    <!-- ===== Main Content ===== -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="main-scroll">
+            <content>
+                <VBox spacing="24" style="-fx-padding: 32;">
+                    <children>
+
+                        <!-- ===== Events Table Section ===== -->
+                        <VBox spacing="20" styleClass="table-card">
+                            <children>
+                                <Label text="Events List" styleClass="section-title"/>
+                                <TableView fx:id="eventTable" prefHeight="400" styleClass="custom-table">
+                                    <columns>
+                                        <TableColumn fx:id="eventIdColumn"      text="ID"          prefWidth="80"/>
+                                        <TableColumn fx:id="nameColumn"         text="Name"        prefWidth="160"/>
+                                        <TableColumn fx:id="dateColumn"         text="Date"        prefWidth="120"/>
+                                        <TableColumn fx:id="timeColumn"         text="Time"        prefWidth="120"/>
+                                        <TableColumn fx:id="locationColumn"     text="Location"    prefWidth="160"/>
+                                        <TableColumn fx:id="capacityColumn"     text="Capacity"    prefWidth="100"/>
+                                        <TableColumn fx:id="statusColumn"       text="Status"      prefWidth="120"/>
+                                        <TableColumn fx:id="descriptionColumn"  text="Description" prefWidth="250"/>
+                                        <TableColumn fx:id="categoryNameColumn" text="Category"    prefWidth="140"/>
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+
+                        <!-- ===== Event Form Section ===== -->
+                        <VBox spacing="20" styleClass="management-card">
+                            <children>
+                                <Label text="Manage Events" styleClass="section-title"/>
+
+                                <GridPane hgap="16" vgap="12">
+                                    <columnConstraints>
+                                        <ColumnConstraints percentWidth="25"/>
+                                        <ColumnConstraints percentWidth="25"/>
+                                        <ColumnConstraints percentWidth="25"/>
+                                        <ColumnConstraints percentWidth="25"/>
+                                    </columnConstraints>
+
+                                    <children>
+                                        <!-- Row 1 -->
+                                        <Label text="Event Name" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                        <TextField fx:id="nameField" promptText="Event name" styleClass="custom-field"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                        <Label text="Date" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                                        <DatePicker fx:id="datePicker" promptText="dd-MM-yyyy" styleClass="custom-field"
+                                                    GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                                        <!-- Row 2 -->
+                                        <Label text="Time" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="timeField" promptText="HH:mm" styleClass="custom-field"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <Label text="Location" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="locationField" promptText="Location" styleClass="custom-field"
+                                                   GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                                        <!-- Row 3 -->
+                                        <Label text="Capacity" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                        <TextField fx:id="capacityField" promptText="Capacity" styleClass="custom-field"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <Label text="Status" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                                        <ChoiceBox fx:id="statusChoiceBox" styleClass="custom-field"
+                                                   GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+                                        <!-- Row 4 -->
+                                        <Label text="Description" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                                        <TextArea fx:id="descriptionField" promptText="Event description"
+                                                  styleClass="custom-field"
+                                                  style="-fx-text-fill: black;"
+                                                  prefRowCount="2" wrapText="true"
+                                                  GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.columnSpan="3"/>
+
+                                        <!-- Row 5 -->
+                                        <Label text="Image URL" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                                        <TextField fx:id="imageField" promptText="Image link (optional)" styleClass="custom-field"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.columnSpan="3"/>
+
+                                        <!-- Row 6: Category -->
+                                        <Label text="Category" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                                        <ComboBox fx:id="categoryChoiceBox" styleClass="custom-field"
+                                                  GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.columnSpan="3"/>
+                                    </children>
+                                </GridPane>
+
+                                <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 20 0 0 0;">
+                                    <children>
+                                        <Button text="Add Event" onAction="#onAddEvent" styleClass="primary-btn"/>
+                                        <Button text="Update Event" onAction="#onUpdateEvent" styleClass="secondary-btn"/>
+                                        <Button text="Delete Event" onAction="#onDeleteEvent" styleClass="danger-btn"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

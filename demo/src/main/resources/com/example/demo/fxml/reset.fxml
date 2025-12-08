@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controllers.ResetController"
+            prefWidth="900" prefHeight="560">
+    <children>
+        <StackPane styleClass="auth-surface" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+                   AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <VBox spacing="25" alignment="CENTER">
+                <Label text="🔄 Reset Password" styleClass="auth-title"/>
+                <Label text="Enter the code sent to your email and choose a new password" styleClass="auth-subtitle"/>
+                <VBox spacing="15" maxWidth="400" styleClass="auth-card">
+                    <TextField fx:id="email" promptText="your@email.com" styleClass="auth-field"/>
+                    <TextField fx:id="code" promptText="6-digit code" styleClass="auth-field"/>
+                    <PasswordField fx:id="newPassword" promptText="New password" styleClass="auth-field"/>
+                    <Button text="Change Password" onAction="#onReset" styleClass="auth-btn"/>
+                    <Button text="Back to Login" onAction="#goLogin" styleClass="auth-btn-ghost"/>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </children>
+</AnchorPane>
+

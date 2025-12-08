@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.demo.controllers.DashboardController"
+            prefWidth="1400" prefHeight="800">
+
+    <!-- ===== Top Bar ===== -->
+    <top>
+        <StackPane styleClass="topbar-modern" prefHeight="70">
+            <padding>
+                <Insets top="15" right="30" bottom="15" left="30"/>
+            </padding>
+
+            <Label text="🎫 TicketHaven"
+                   styleClass="brand-title"
+                   StackPane.alignment="CENTER_LEFT"/>
+            <Label fx:id="welcome"
+                   text="Welcome 👋"
+                   styleClass="brand-title"
+                   StackPane.alignment="CENTER"/>
+            <Button text="Logout"
+                    styleClass="logout-btn"
+                    onAction="#onLogout"
+                    StackPane.alignment="CENTER_RIGHT"/>
+        </StackPane>
+    </top>
+
+    <!-- ===== Main Content ===== -->
+    <center>
+        <ScrollPane fitToWidth="true" pannable="true" styleClass="main-scroll">
+            <content>
+                <VBox spacing="30" alignment="TOP_CENTER">
+                    <padding>
+                        <Insets top="30" right="40" bottom="40" left="40"/>
+                    </padding>
+
+                    <!-- Overview Stats Section -->
+                    <FlowPane hgap="20" vgap="20" alignment="CENTER">
+                        <VBox styleClass="overview-card" alignment="CENTER">
+                            <Label text="Total Events" styleClass="card-title"/>
+                            <Label fx:id="eventCountLabel" text="0" styleClass="card-value"/>
+                        </VBox>
+                        <VBox styleClass="overview-card" alignment="CENTER">
+                            <Label text="Total Sections" styleClass="card-title"/>
+                            <Label fx:id="sectionCountLabel" text="0" styleClass="card-value"/>
+                        </VBox>
+                        <VBox styleClass="overview-card" alignment="CENTER">
+                            <Label text="Total Categories" styleClass="card-title"/>
+                            <Label fx:id="categoryCountLabel" text="0" styleClass="card-value"/>
+                        </VBox>
+                        <VBox styleClass="overview-card" alignment="CENTER">
+                            <Label text="Total Users" styleClass="card-title"/>
+                            <Label fx:id="userCountLabel" text="0" styleClass="card-value"/>
+                        </VBox>
+                    </FlowPane>
+
+                    <!-- Action Buttons Section -->
+                    <FlowPane hgap="15" vgap="15" alignment="CENTER">
+                        <Button text="+ Add Event" styleClass="action-btn" onAction="#onAddEventClicked"/>
+                        <Button text="+ Add Section" styleClass="action-btn" onAction="#onAddSectionClicked"/>
+                        <Button text="+ Add Category" styleClass="action-btn" onAction="#onAddCategoryClicked"/>
+                        <Button text="+ Add User" styleClass="action-btn" onAction="#onAddUserClicked"/>
+                        <Button text="Refresh" styleClass="action-btn" onAction="#onRefreshDashboard"/>
+                        <Button text="📊 Event Analytics" styleClass="action-btn" onAction="#onViewEventAnalytics"/>
+                    </FlowPane>
+
+                    <!-- Tables Section -->
+                    <VBox fx:id="tablesContainer" spacing="35" alignment="TOP_CENTER" prefWidth="1200" fillWidth="true">
+
+                        <!-- Events Table -->
+                        <VBox spacing="10" styleClass="table-card">
+                            <Label text="Events" styleClass="section-title"/>
+                            <TableView fx:id="eventTable" styleClass="custom-table">
+                                <columns>
+                                    <TableColumn fx:id="eventNameColumn" text="Event Name"/>
+                                    <TableColumn fx:id="eventDateColumn" text="Date"/>
+                                    <TableColumn fx:id="eventTimeColumn" text="Time"/>
+                                    <TableColumn fx:id="eventLocationColumn" text="Location"/>
+                                    <TableColumn fx:id="eventCapacityColumn" text="Capacity"/>
+                                    <TableColumn fx:id="eventStatusColumn" text="Status"/>
+                                    <TableColumn fx:id="eventCategoryColumn" text="Category"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+
+                        <!-- Sections Table -->
+                        <VBox spacing="10" styleClass="table-card">
+                            <Label text="Sections" styleClass="section-title"/>
+                            <TableView fx:id="sectionTable" styleClass="custom-table">
+                                <columns>
+                                    <TableColumn fx:id="sectionNameColumn" text="Section Name"/>
+                                    <TableColumn fx:id="sectionStatusColumn" text="Status"/>
+                                    <TableColumn fx:id="sectionEventColumn" text="Event Name"/>
+                                    <TableColumn fx:id="sectionRowCountColumn" text="Row Count"/>
+                                    <TableColumn fx:id="sectionSeatCountColumn" text="Seat Count"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+
+                        <!-- Categories Table -->
+                        <VBox spacing="10" styleClass="table-card">
+                            <Label text="Categories" styleClass="section-title"/>
+                            <TableView fx:id="categoryTable" styleClass="custom-table">
+                                <columns>
+                                    <TableColumn fx:id="categoryNameColumn" text="Category Name"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+
+                        <!-- Users Table -->
+                        <VBox spacing="10" styleClass="table-card">
+                            <Label text="Users" styleClass="section-title"/>
+                            <TableView fx:id="userTable" styleClass="custom-table">
+                                <columns>
+                                    <TableColumn fx:id="firstNameColumn" text="First Name"/>
+                                    <TableColumn fx:id="lastNameColumn" text="Last Name"/>
+                                    <TableColumn fx:id="usernameColumn" text="Username"/>
+                                    <TableColumn fx:id="emailColumn" text="Email"/>
+                                    <TableColumn fx:id="phoneColumn" text="Phone"/>
+                                    <TableColumn fx:id="roleColumn" text="Role"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+
+                    </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
