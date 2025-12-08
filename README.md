@@ -358,8 +358,8 @@ Below are the main mappings from:
 ### 1) Clone the repository
 
 ```bash
-git clone https://github.com/M677871/csis-231-project.git
-cd csis-231-project/csis_231-login-registration-jwt
+git clone https://github.com/Franovski/JavaTechProject.git
+cd JavaTechProject/GeorgeProject
 ```
 
 ### 2) Create the database
