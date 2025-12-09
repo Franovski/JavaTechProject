@@ -1,8 +1,8 @@
-# LearnOnline – CSIS 231 Final Project
+# TicketHaven – CSIS 231 Final Project
 
 > **University of Balamand – Faculty of Arts & Sciences**  
 > **CSIS 231 – Java Technology**  
-> Secure online learning platform with **Spring Boot + PostgreSQL + JavaFX 2D/3D**,  
+> Secure online ticketing box office with **Spring Boot + PostgreSQL + JavaFX 2D/3D**,  
 > **JWT + OTP 2FA**, and **role-based dashboards (Admin)**.
 
 ---
@@ -25,7 +25,7 @@ The system provides:
 - **Customer**
     - UI not finished yet
     - Register and login (with **OTP-based 2FA** when required).
-    - Browse events, purchase tickets, register in events etc.. .
+    - Browse events, purchase tickets, register in events etc..
     - View **registered events**.
 - **Admin**
     - Global view and management of users, events, categories, sections.
@@ -132,7 +132,7 @@ GeorgeProject/
 -UI not finished
 - Register / login with **JWT auth** and optional **OTP 2FA**.
 - Browse available events and register.
-- see their registered events.
+- see their registered events and purchases.
 
 ### Admin
 
@@ -178,12 +178,12 @@ GeorgeProject/
 - `POST /api/auth/otp/verify`  
   Verify OTP for both **LOGIN_2FA** and **PASSWORD_RESET**.
 - `POST /api/auth/otp/request`  
-  Resend OTP when the user did not receive it or it expired.
+  Resend OTP when the user did not receive it, or it expired.
 
 ### Authorization & errors
 
 - Role-based access enforced via **Spring Security**.
-- UI hides/disables actions that are not allowed for Student/Instructor/Admin.
+- UI hides/disables actions that are not allowed for Customer/Admin.
 - `GlobalExceptionHandler` converts exceptions into a unified `ErrorResponse` with:
     - timestamp
     - HTTP status
@@ -225,7 +225,7 @@ csis231-api/
 │       └── otp/        # OTP verify/request endpoints
 │   ├── user/           # User & Role domain, services, controllers
 │   ├── category/       # Event categories
-│   ├── config/         # Security
+│   ├── config/         # Security configurations
 │   ├── Event/          # Events services and controllers
 │   ├── Section/        # Event sections
 │   ├── Ticket/         # Event tickets

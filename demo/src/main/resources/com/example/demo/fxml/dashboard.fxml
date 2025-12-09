@@ -27,7 +27,7 @@
                     onAction="#onLogout"
                     StackPane.alignment="CENTER_RIGHT"/>
         </StackPane>
-    </top>
+    </top>g
 
     <!-- ===== Main Content ===== -->
     <center>
