@@ -346,3 +346,7 @@
 .table-view .column-header .label {
     -fx-alignment: CENTER_LEFT;
 }
+
+.description-field {
+    -fx-text-fill: black; /* makes typed text black only in description TextArea */
+}

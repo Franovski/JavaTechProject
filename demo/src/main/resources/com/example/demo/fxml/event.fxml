@@ -72,8 +72,10 @@
                             <ChoiceBox fx:id="statusChoiceBox" styleClass="custom-field" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
                             <Label text="Description" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                            <TextArea fx:id="descriptionField" promptText="Event description" styleClass="custom-field"
-                                      wrapText="true" prefRowCount="2" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.columnSpan="3"/>
+                            <TextArea fx:id="descriptionField" promptText="Event description"
+                                      styleClass="custom-field description-field"
+                                      wrapText="true" prefRowCount="2"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.columnSpan="3"/>
 
                             <Label text="Image URL" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
                             <TextField fx:id="imageField" promptText="Image link (optional)" styleClass="custom-field"
