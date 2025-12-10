@@ -8,6 +8,7 @@ import com.example.demo.model.Event;
 import com.example.demo.model.Event.EventStatus;
 import com.example.demo.security.TokenStore;
 import com.example.demo.util.AlertUtils;
+import com.example.demo.util.TableUtils;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
@@ -22,13 +23,9 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * Controller for managing Events.
- *
- * Handles displaying events in a table, adding, updating, and deleting events.
- * Also manages event form inputs and Category selection for events.
  */
 public class EventController {
 
-    // ===== TableView & Columns =====
     @FXML private TableView<Event> eventTable;
     @FXML private TableColumn<Event, Long> eventIdColumn;
     @FXML private TableColumn<Event, String> nameColumn;
@@ -40,7 +37,6 @@ public class EventController {
     @FXML private TableColumn<Event, String> descriptionColumn;
     @FXML private TableColumn<Event, String> categoryNameColumn;
 
-    // ===== Form Inputs =====
     @FXML private TextField nameField;
     @FXML private DatePicker datePicker;
     @FXML private TextField timeField;
@@ -51,7 +47,6 @@ public class EventController {
     @FXML private ComboBox<Category> categoryChoiceBox;
     @FXML private ChoiceBox<EventStatus> statusChoiceBox;
 
-    // ===== APIs & Helpers =====
     private final EventApi eventApi = new EventApi();
     private final CategoryApi categoryApi = new CategoryApi();
     private final Map<Long, String> categoryMap = new HashMap<>();
@@ -59,13 +54,9 @@ public class EventController {
     private final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
 
-    /**
-     * Initializes the controller.
-     * Sets table columns, loads categories, events, and configures form selection listener.
-     */
     @FXML
     public void initialize() {
-        // ===== Table Bindings =====
+        // Bind columns
         eventIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(
@@ -81,10 +72,33 @@ public class EventController {
         categoryNameColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(
                 c.getValue().getCategory() != null ? c.getValue().getCategory().getName() : ""));
 
-        // ===== Status ChoiceBox =====
-        statusChoiceBox.getItems().setAll(EventStatus.values());
+        // Constrained resize → no horizontal scroll
+        eventTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        // ===== Category ComboBox =====
+        // Set min widths for readability
+        eventIdColumn.setMinWidth(50);
+        nameColumn.setMinWidth(120);
+        dateColumn.setMinWidth(100);
+        timeColumn.setMinWidth(80);
+        locationColumn.setMinWidth(120);
+        capacityColumn.setMinWidth(80);
+        statusColumn.setMinWidth(100);
+        descriptionColumn.setMinWidth(200);
+        categoryNameColumn.setMinWidth(100);
+
+        // Apply ellipsis + tooltip for long text
+        nameColumn.setCellFactory(TableUtils.<Event>createEllipsisCell());
+        descriptionColumn.setCellFactory(TableUtils.<Event>createEllipsisCell());
+
+        // Apply styling for alignment and colors
+        TableUtils.style(eventTable,
+                eventIdColumn, nameColumn, dateColumn, timeColumn,
+                locationColumn, capacityColumn, statusColumn,
+                descriptionColumn, categoryNameColumn
+        );
+
+        // Load status, categories, events...
+        statusChoiceBox.getItems().setAll(EventStatus.values());
         categoryChoiceBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(Category cat) { return cat != null ? cat.getName() : ""; }
@@ -92,29 +106,17 @@ public class EventController {
             public Category fromString(String s) { return null; }
         });
 
-        // ===== Load Categories & Events =====
         loadCategories();
 
-        // ===== Table Selection Listener =====
+        // Table selection listener
         eventTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, e) -> {
-            if (e != null) {
-                nameField.setText(Optional.ofNullable(e.getName()).orElse(""));
-                datePicker.setValue(e.getDate());
-                timeField.setText(e.getTime() != null ? e.getTime().format(TIME_FORMAT) : "");
-                locationField.setText(Optional.ofNullable(e.getLocation()).orElse(""));
-                capacityField.setText(String.valueOf(e.getCapacity()));
-                statusChoiceBox.setValue(e.getStatus());
-                descriptionField.setText(Optional.ofNullable(e.getDescription()).orElse(""));
-                imageField.setText(Optional.ofNullable(e.getImage()).orElse(""));
-                categoryChoiceBox.setValue(e.getCategory());
-            }
+            if (e != null) populateForm(e);
         });
+
+        // Set fixed row height for compact layout
+        eventTable.setFixedCellSize(28);
     }
 
-    /**
-     * Loads categories asynchronously and populates the ComboBox.
-     * Also stores a category ID → name map for events.
-     */
     private void loadCategories() {
         CompletableFuture.runAsync(() -> {
             try {
@@ -126,7 +128,7 @@ public class EventController {
                 }
                 Platform.runLater(() -> {
                     categoryChoiceBox.getItems().setAll(categories);
-                    loadEvents(); // load events AFTER categories
+                    loadEvents();
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> AlertUtils.error("Failed to load categories: " + e.getMessage()));
@@ -134,18 +136,13 @@ public class EventController {
         });
     }
 
-    /**
-     * Loads events asynchronously and sets the table items.
-     * Updates event categories from the category map.
-     */
     private void loadEvents() {
         CompletableFuture.runAsync(() -> {
             try {
                 List<Event> events = eventApi.list();
                 for (Event e : events) {
-                    if (e.getCategory() != null) {
+                    if (e.getCategory() != null)
                         e.getCategory().setName(categoryMap.get(e.getCategory().getId()));
-                    }
                 }
                 Platform.runLater(() -> eventTable.getItems().setAll(events));
             } catch (Exception ex) {
@@ -154,10 +151,6 @@ public class EventController {
         });
     }
 
-    /**
-     * Adds a new event using the form data.
-     * Runs asynchronously and updates the table on success.
-     */
     @FXML
     private void onAddEvent() {
         Event e = collectEventFromForm();
@@ -177,10 +170,6 @@ public class EventController {
         });
     }
 
-    /**
-     * Updates the selected event with form data.
-     * Runs asynchronously and updates the table on success.
-     */
     @FXML
     private void onUpdateEvent() {
         Event selected = eventTable.getSelectionModel().getSelectedItem();
@@ -188,7 +177,6 @@ public class EventController {
             AlertUtils.warn("Please select an event to update.");
             return;
         }
-
         Event e = collectEventFromForm();
         if (e == null) return;
 
@@ -207,10 +195,6 @@ public class EventController {
         });
     }
 
-    /**
-     * Deletes the selected event.
-     * Runs asynchronously and removes it from the table on success.
-     */
     @FXML
     private void onDeleteEvent() {
         Event selected = eventTable.getSelectionModel().getSelectedItem();
@@ -218,7 +202,6 @@ public class EventController {
             AlertUtils.warn("Please select an event to delete.");
             return;
         }
-
         CompletableFuture.runAsync(() -> {
             try {
                 eventApi.delete(selected.getId());
@@ -233,12 +216,6 @@ public class EventController {
         });
     }
 
-    /**
-     * Collects event data from the form fields.
-     * Validates required fields before creating the Event object.
-     *
-     * @return Event object or null if validation fails
-     */
     private Event collectEventFromForm() {
         if (nameField.getText().isBlank() || locationField.getText().isBlank() ||
                 capacityField.getText().isBlank() || categoryChoiceBox.getValue() == null ||
@@ -246,7 +223,6 @@ public class EventController {
             AlertUtils.warn("Please fill in all fields.");
             return null;
         }
-
         Event e = new Event();
         e.setName(nameField.getText().trim());
         e.setDate(datePicker.getValue());
@@ -257,13 +233,21 @@ public class EventController {
         e.setDescription(Optional.ofNullable(descriptionField.getText()).orElse("").trim());
         e.setImage(Optional.ofNullable(imageField.getText()).orElse("").trim());
         e.setCategory(categoryChoiceBox.getValue());
-
         return e;
     }
 
-    /**
-     * Clears the form fields and selection in the table.
-     */
+    private void populateForm(Event e) {
+        nameField.setText(Optional.ofNullable(e.getName()).orElse(""));
+        datePicker.setValue(e.getDate());
+        timeField.setText(e.getTime() != null ? e.getTime().format(TIME_FORMAT) : "");
+        locationField.setText(Optional.ofNullable(e.getLocation()).orElse(""));
+        capacityField.setText(String.valueOf(e.getCapacity()));
+        statusChoiceBox.setValue(e.getStatus());
+        descriptionField.setText(Optional.ofNullable(e.getDescription()).orElse(""));
+        imageField.setText(Optional.ofNullable(e.getImage()).orElse(""));
+        categoryChoiceBox.setValue(e.getCategory());
+    }
+
     private void clearForm() {
         nameField.clear();
         datePicker.setValue(null);
@@ -277,10 +261,7 @@ public class EventController {
         eventTable.getSelectionModel().clearSelection();
     }
 
-    /** Navigate back to the main dashboard */
     @FXML private void backToMain() { Launcher.go("dashboard.fxml", "Dashboard"); }
-
-    /** Logout and return to login screen */
     @FXML public void onLogout() {
         TokenStore.clear();
         Launcher.go("login.fxml", "Login");

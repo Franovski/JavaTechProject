@@ -190,6 +190,8 @@
     -fx-text-fill: #F2F4F8;
 }
 
+
+
 /* ===== Category Management ===== */
 
 .management-card, .table-card {
@@ -315,4 +317,32 @@
     -fx-padding: 2 6;
 }
 
+/* ===== FIXED TABLE COLUMN ALIGNMENT & OVERFLOW ===== */
 
+/* ID Column */
+.table-view .table-column-id {
+    -fx-alignment: CENTER;
+    -fx-min-width: 50;
+    -fx-max-width: 80;
+}
+
+/* Description / Name columns */
+.table-view .table-column-description,
+.table-view .table-column-name {
+    -fx-alignment: CENTER_LEFT;
+    -fx-text-overrun: ELLIPSIS;
+    -fx-min-width: 200;
+    -fx-max-width: 300;
+}
+
+/* Ensure all other cells alignment consistency */
+.table-view .table-cell {
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 2 6;
+}
+
+/* Column headers alignment consistency */
+.table-view .column-header,
+.table-view .column-header .label {
+    -fx-alignment: CENTER_LEFT;
+}

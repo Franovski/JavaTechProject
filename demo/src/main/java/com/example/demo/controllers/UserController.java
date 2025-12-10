@@ -5,10 +5,11 @@ import com.example.demo.api.UserApi;
 import com.example.demo.model.User;
 import com.example.demo.security.TokenStore;
 import com.example.demo.util.AlertUtils;
+import com.example.demo.util.TableUtils;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 
 import java.util.List;
@@ -16,24 +17,22 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * Controller for managing Users.
- *
- * Handles displaying users in a table, adding, updating, and deleting users.
- * Also manages form inputs including role, activation, 2FA, and email verification.
+ * Simplified/resilient column sizing to avoid ghost column / alignment issues.
  */
 public class UserController {
 
     // ===== TableView & Columns =====
     @FXML private TableView<User> userTable;
-    @FXML private TableColumn<User, Long> userIdColumn;
+    @FXML private TableColumn<User, String> userIdColumn;
     @FXML private TableColumn<User, String> userNameColumn;
     @FXML private TableColumn<User, String> userEmailColumn;
     @FXML private TableColumn<User, String> firstNameColumn;
     @FXML private TableColumn<User, String> lastNameColumn;
     @FXML private TableColumn<User, String> phoneColumn;
-    @FXML private TableColumn<User, User.Role> userRoleColumn;
-    @FXML private TableColumn<User, Boolean> activeColumn;
-    @FXML private TableColumn<User, Boolean> twoFaColumn;
-    @FXML private TableColumn<User, Boolean> emailVerColumn;
+    @FXML private TableColumn<User, String> userRoleColumn;
+    @FXML private TableColumn<User, String> activeColumn;
+    @FXML private TableColumn<User, String> twoFaColumn;
+    @FXML private TableColumn<User, String> emailVerColumn;
     @FXML private TableColumn<User, String> createdAtColumn;
 
     // ===== Form Inputs =====
@@ -45,36 +44,107 @@ public class UserController {
     // ===== API =====
     private final UserApi userApi = new UserApi();
 
-    /**
-     * Initializes the controller.
-     * Sets table columns, configures ChoiceBox, loads users, and sets selection listener.
-     */
     @FXML
     public void initialize() {
-        // ===== Table Columns =====
-        userIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        userNameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
-        userEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        userRoleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
-        activeColumn.setCellValueFactory(new PropertyValueFactory<>("isActive"));
-        twoFaColumn.setCellValueFactory(new PropertyValueFactory<>("twoFactorEnabled"));
-        emailVerColumn.setCellValueFactory(new PropertyValueFactory<>("emailVerified"));
-        createdAtColumn.setCellValueFactory(new PropertyValueFactory<>("createdAtFormatted"));
+        // -------------------------
+        // Cell value factories
+        // -------------------------
+        userIdColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(String.valueOf(c.getValue().getId())));
+        userNameColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().getUsername()));
+        userEmailColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().getEmail()));
+        firstNameColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().getFirstName()));
+        lastNameColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().getLastName()));
+        phoneColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().getPhone()));
+        userRoleColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().getRole() != null ? c.getValue().getRole().name() : ""));
+        activeColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(Boolean.TRUE.equals(c.getValue().getIsActive()) ? "Yes" : "No"));
+        twoFaColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(Boolean.TRUE.equals(c.getValue().getTwoFactorEnabled()) ? "Yes" : "No"));
+        emailVerColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(Boolean.TRUE.equals(c.getValue().getEmailVerified()) ? "Yes" : "No"));
+        createdAtColumn.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().getCreatedAtFormatted()));
 
-        // ===== ChoiceBox Setup =====
+        // -------------------------
+        // Resize policy: constrained
+        // -------------------------
+        // Use CONSTRAINED_RESIZE_POLICY so JavaFX distributes the remaining space
+        // to columns rather than creating a phantom/filler column.
+        userTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // -------------------------
+        // Prefer/min widths (keeps layout stable)
+        // -------------------------
+        // These are conservative sizes. Constrained policy will expand columns to fit table width.
+        userIdColumn.setPrefWidth(60);
+        userIdColumn.setMinWidth(40);
+
+        userNameColumn.setPrefWidth(150);
+        userNameColumn.setMinWidth(100);
+
+        userEmailColumn.setPrefWidth(220);
+        userEmailColumn.setMinWidth(120);
+
+        firstNameColumn.setPrefWidth(120);
+        firstNameColumn.setMinWidth(80);
+
+        lastNameColumn.setPrefWidth(120);
+        lastNameColumn.setMinWidth(80);
+
+        phoneColumn.setPrefWidth(130);
+        phoneColumn.setMinWidth(90);
+
+        userRoleColumn.setPrefWidth(100);
+        userRoleColumn.setMinWidth(80);
+
+        activeColumn.setPrefWidth(70);
+        activeColumn.setMinWidth(60);
+
+        twoFaColumn.setPrefWidth(70);
+        twoFaColumn.setMinWidth(60);
+
+        emailVerColumn.setPrefWidth(80);
+        emailVerColumn.setMinWidth(60);
+
+        createdAtColumn.setPrefWidth(180);
+        createdAtColumn.setMinWidth(120);
+
+        // Ensure columns are resizable (so the constrained policy can allocate free space)
+        userTable.getColumns().forEach(col -> col.setResizable(true));
+
+        // -------------------------
+        // Ellipsis on long text cols (your TableUtils)
+        // -------------------------
+        userNameColumn.setCellFactory(TableUtils.createEllipsisCell());
+        userEmailColumn.setCellFactory(TableUtils.createEllipsisCell());
+        firstNameColumn.setCellFactory(TableUtils.createEllipsisCell());
+        lastNameColumn.setCellFactory(TableUtils.createEllipsisCell());
+
+        // -------------------------
+        // Styling / alignment
+        // -------------------------
+        TableUtils.style(userTable,
+                userIdColumn, userNameColumn, userEmailColumn, firstNameColumn, lastNameColumn,
+                phoneColumn, userRoleColumn, activeColumn, twoFaColumn, emailVerColumn, createdAtColumn
+        );
+
+        activeColumn.setStyle("-fx-alignment: CENTER;");
+        twoFaColumn.setStyle("-fx-alignment: CENTER;");
+        emailVerColumn.setStyle("-fx-alignment: CENTER;");
+        userRoleColumn.setStyle("-fx-alignment: CENTER;");
+
+        // Fixed row height (keeps visuals consistent)
+        userTable.setFixedCellSize(28);
+
+        // -------------------------
+        // ChoiceBox Setup
+        // -------------------------
         userRoleChoiceBox.getItems().setAll(User.Role.values());
         userRoleChoiceBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(User.Role role) { return role == null ? "" : role.name(); }
-            @Override
-            public User.Role fromString(String string) { return User.Role.valueOf(string); }
+            @Override public String toString(User.Role role) { return role != null ? role.name() : ""; }
+            @Override public User.Role fromString(String string) { return User.Role.valueOf(string); }
         });
         userRoleChoiceBox.setValue(User.Role.CUSTOMER);
 
-        // ===== Selection Listener =====
+        // -------------------------
+        // Selection listener
+        // -------------------------
         userTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, u) -> {
             if (u != null) {
                 userNameField.setText(u.getUsername());
@@ -90,25 +160,32 @@ public class UserController {
             }
         });
 
-        // ===== Load Users =====
+        // -------------------------
+        // Load data
+        // -------------------------
         loadUsers();
 
-        // ===== Display boolean as Yes/No =====
-        setBooleanColumnFactory(activeColumn);
-        setBooleanColumnFactory(twoFaColumn);
-        setBooleanColumnFactory(emailVerColumn);
+        // small defensive refresh after scene is ready to force layout & avoid sticky ghost column
+        userTable.sceneProperty().addListener((obs, oldS, newS) -> {
+            if (newS != null) {
+                Platform.runLater(() -> {
+                    // refresh triggers re-layout under constrained policy
+                    userTable.refresh();
+                });
+            }
+        });
     }
 
     // ==================== LOAD DATA ====================
-
-    /**
-     * Loads users asynchronously and populates the table.
-     */
     private void loadUsers() {
         CompletableFuture.runAsync(() -> {
             try {
                 List<User> list = userApi.list();
-                Platform.runLater(() -> userTable.getItems().setAll(list));
+                Platform.runLater(() -> {
+                    userTable.getItems().setAll(list);
+                    // after items loaded we refresh to ensure columns are laid out correctly
+                    userTable.refresh();
+                });
             } catch (Exception ex) {
                 Platform.runLater(() -> AlertUtils.error("Failed to load users: " + ex.getMessage()));
             }
@@ -116,11 +193,6 @@ public class UserController {
     }
 
     // ==================== CRUD ====================
-
-    /**
-     * Adds a new user using form data.
-     * Performs validation and runs asynchronously.
-     */
     @FXML
     private void onAddUser() {
         String username = userNameField.getText().trim();
@@ -150,6 +222,7 @@ public class UserController {
                     userTable.getItems().add(created);
                     clearForm();
                     AlertUtils.info("User added successfully!");
+                    userTable.refresh();
                 });
             } catch (Exception ex) {
                 Platform.runLater(() -> AlertUtils.error("Failed to add user: " + ex.getMessage()));
@@ -157,10 +230,6 @@ public class UserController {
         });
     }
 
-    /**
-     * Updates the selected user with form data.
-     * Performs validation and runs asynchronously.
-     */
     @FXML
     private void onUpdateUser() {
         User selected = userTable.getSelectionModel().getSelectedItem();
@@ -196,6 +265,7 @@ public class UserController {
                     if (idx >= 0) userTable.getItems().set(idx, updated);
                     clearForm();
                     AlertUtils.info("User updated successfully!");
+                    userTable.refresh();
                 });
             } catch (Exception ex) {
                 Platform.runLater(() -> AlertUtils.error("Failed to update user: " + ex.getMessage()));
@@ -203,10 +273,6 @@ public class UserController {
         });
     }
 
-    /**
-     * Deletes the selected user.
-     * Runs asynchronously and removes the user from the table on success.
-     */
     @FXML
     private void onDeleteUser() {
         User selected = userTable.getSelectionModel().getSelectedItem();
@@ -219,6 +285,7 @@ public class UserController {
                     userTable.getItems().remove(selected);
                     clearForm();
                     AlertUtils.info("User deleted successfully!");
+                    userTable.refresh();
                 });
             } catch (Exception ex) {
                 Platform.runLater(() -> AlertUtils.error("Failed to delete user: " + ex.getMessage()));
@@ -227,10 +294,6 @@ public class UserController {
     }
 
     // ==================== HELPERS ====================
-
-    /**
-     * Clears all form fields and table selection.
-     */
     private void clearForm() {
         userNameField.clear();
         userEmailField.clear();
@@ -245,37 +308,14 @@ public class UserController {
         userTable.getSelectionModel().clearSelection();
     }
 
-    /**
-     * Trims a string and returns null if empty.
-     *
-     * @param s input string
-     * @return trimmed string or null
-     */
     private static String trimOrNull(String s) {
         if (s == null) return null;
         s = s.trim();
         return s.isEmpty() ? null : s;
     }
 
-    /**
-     * Configures a boolean column to display "Yes"/"No" instead of true/false.
-     *
-     * @param col TableColumn to configure
-     */
-    private void setBooleanColumnFactory(TableColumn<User, Boolean> col) {
-        col.setCellFactory(c -> new TableCell<>() {
-            @Override
-            protected void updateItem(Boolean item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "" : item ? "Yes" : "No");
-            }
-        });
-    }
-
-    /** Navigate back to the main dashboard */
     @FXML private void backToMain() { Launcher.go("dashboard.fxml", "Dashboard"); }
 
-    /** Logout and return to login screen */
     @FXML public void onLogout() {
         TokenStore.clear();
         Launcher.go("login.fxml", "Login");

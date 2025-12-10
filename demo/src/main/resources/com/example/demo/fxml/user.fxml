@@ -25,15 +25,15 @@
     <center>
         <ScrollPane fitToWidth="true" styleClass="main-scroll">
             <content>
-                <VBox spacing="24" style="-fx-padding: 32;">
+                <VBox spacing="24" style="-fx-padding: 32;" VBox.vgrow="ALWAYS">
                     <children>
 
                         <!-- ===== Users Table Section ===== -->
-                        <VBox spacing="20" styleClass="table-card">
+                        <VBox spacing="20" styleClass="table-card" VBox.vgrow="ALWAYS">
                             <children>
                                 <Label text="Users List" styleClass="section-title"/>
 
-                                <TableView fx:id="userTable" prefHeight="400" styleClass="custom-table">
+                                <TableView fx:id="userTable" styleClass="custom-table" VBox.vgrow="ALWAYS">
                                     <columns>
                                         <TableColumn fx:id="userIdColumn"      text="ID"         prefWidth="80"/>
                                         <TableColumn fx:id="userNameColumn"    text="Username"   prefWidth="140"/>

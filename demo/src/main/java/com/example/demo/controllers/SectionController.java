@@ -7,6 +7,7 @@ import com.example.demo.model.Event;
 import com.example.demo.model.Section;
 import com.example.demo.security.TokenStore;
 import com.example.demo.util.AlertUtils;
+import com.example.demo.util.TableUtils;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
@@ -64,7 +65,6 @@ public class SectionController {
                 new ReadOnlyStringWrapper(c.getValue().getStatus() != null ? c.getValue().getStatus().name() : "")
         );
 
-        // Display event name from either nested Event or flat field
         eventNameColumn.setCellValueFactory(c -> {
             Section s = c.getValue();
             String name = "";
@@ -76,6 +76,30 @@ public class SectionController {
             return new ReadOnlyStringWrapper(name);
         });
 
+        // ===== Table Styling =====
+        sectionTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Min widths for readability
+        sectionIdColumn.setMinWidth(50);
+        sectionNameColumn.setMinWidth(150);
+        statusColumn.setMinWidth(100);
+        eventNameColumn.setMinWidth(150);
+        rowCountColumn.setMinWidth(80);
+        seatCountColumn.setMinWidth(80);
+
+        // Ellipsis + tooltip for long text
+        sectionNameColumn.setCellFactory(TableUtils.<Section>createEllipsisCell());
+        eventNameColumn.setCellFactory(TableUtils.<Section>createEllipsisCell());
+
+        // Apply alignment + text color
+        TableUtils.style(sectionTable,
+                sectionIdColumn, sectionNameColumn, statusColumn,
+                eventNameColumn, rowCountColumn, seatCountColumn
+        );
+
+        // Fixed row height
+        sectionTable.setFixedCellSize(28);
+
         // ===== ComboBox / ChoiceBox =====
         statusChoiceBox.getItems().setAll(Section.SectionStatus.values());
         eventComboBox.setConverter(new StringConverter<>() {
@@ -85,11 +109,11 @@ public class SectionController {
             public Event fromString(String s) { return null; }
         });
 
-        // ===== Load data =====
+        // Load data
         loadEvents();
         loadSections();
 
-        // ===== Selection listener (auto-fill fields) =====
+        // Selection listener
         sectionTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, s) -> {
             if (s != null) {
                 sectionNameField.setText(s.getName());
@@ -109,6 +133,7 @@ public class SectionController {
             }
         });
     }
+
 
     // ==================== LOAD DATA ====================
 

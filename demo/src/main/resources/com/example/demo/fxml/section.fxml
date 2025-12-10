@@ -9,6 +9,7 @@
             prefWidth="1280" prefHeight="800"
             styleClass="root">
 
+    <!-- ===== Top Bar ===== -->
     <top>
         <HBox spacing="16" alignment="CENTER_LEFT" styleClass="topbar-modern">
             <children>
@@ -20,73 +21,71 @@
         </HBox>
     </top>
 
+    <!-- ===== Main Content ===== -->
     <center>
-        <ScrollPane fitToWidth="true" styleClass="main-scroll">
-            <content>
-                <VBox spacing="24" style="-fx-padding: 32;">
-                    <children>
+        <VBox spacing="24" style="-fx-padding: 32;">
 
-                        <VBox spacing="20" styleClass="table-card">
-                            <children>
-                                <Label text="Sections List" styleClass="section-title"/>
-                                <TableView fx:id="sectionTable" prefHeight="400" styleClass="custom-table">
-                                    <columns>
-                                        <TableColumn fx:id="sectionIdColumn" text="ID" prefWidth="80"/>
-                                        <TableColumn fx:id="sectionNameColumn" text="Section Name" prefWidth="160"/>
-                                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="120"/>
-                                        <TableColumn fx:id="eventNameColumn" text="Event Name" prefWidth="180"/>
-                                        <TableColumn fx:id="rowCountColumn" text="Rows" prefWidth="100"/>
-                                        <TableColumn fx:id="seatCountColumn" text="Seats" prefWidth="100"/>
-                                    </columns>
-                                </TableView>
-                            </children>
-                        </VBox>
+            <!-- ===== Sections Table Section ===== -->
+            <VBox spacing="20" styleClass="table-card">
+                <children>
+                    <Label text="Sections List" styleClass="section-title"/>
+                    <TableView fx:id="sectionTable" styleClass="custom-table" prefHeight="400">
+                        <columns>
+                            <TableColumn fx:id="sectionIdColumn" text="ID"/>
+                            <TableColumn fx:id="sectionNameColumn" text="Section Name"/>
+                            <TableColumn fx:id="statusColumn" text="Status"/>
+                            <TableColumn fx:id="eventNameColumn" text="Event Name"/>
+                            <TableColumn fx:id="rowCountColumn" text="Rows"/>
+                            <TableColumn fx:id="seatCountColumn" text="Seats"/>
+                        </columns>
+                    </TableView>
+                </children>
+            </VBox>
 
-                        <VBox spacing="20" styleClass="management-card">
-                            <children>
-                                <Label text="Manage Sections" styleClass="section-title"/>
-                                <GridPane hgap="16" vgap="12">
-                                    <columnConstraints>
-                                        <ColumnConstraints percentWidth="25"/>
-                                        <ColumnConstraints percentWidth="25"/>
-                                        <ColumnConstraints percentWidth="25"/>
-                                        <ColumnConstraints percentWidth="25"/>
-                                    </columnConstraints>
-                                    <children>
-                                        <Label text="Section Name" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                        <TextField fx:id="sectionNameField" promptText="Section Name" styleClass="custom-field"
-                                                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <!-- ===== Section Form Section ===== -->
+            <VBox spacing="20" styleClass="management-card">
+                <children>
+                    <Label text="Manage Sections" styleClass="section-title"/>
+                    <GridPane hgap="16" vgap="12">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                        </columnConstraints>
+                        <children>
+                            <Label text="Section Name" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <TextField fx:id="sectionNameField" promptText="Section Name" styleClass="custom-field"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-                                        <Label text="Event" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                                        <ComboBox fx:id="eventComboBox" promptText="Select Event" styleClass="custom-field"
-                                                  GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                            <Label text="Event" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                            <ComboBox fx:id="eventComboBox" promptText="Select Event" styleClass="custom-field"
+                                      GridPane.columnIndex="3" GridPane.rowIndex="0"/>
 
-                                        <Label text="Status" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                        <ChoiceBox fx:id="statusChoiceBox" styleClass="custom-field"
-                                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            <Label text="Status" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <ChoiceBox fx:id="statusChoiceBox" styleClass="custom-field"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-                                        <Label text="Row Count" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                                        <TextField fx:id="rowCountField" promptText="Rows" styleClass="custom-field"
-                                                   GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                            <Label text="Row Count" styleClass="field-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                            <TextField fx:id="rowCountField" promptText="Rows" styleClass="custom-field"
+                                       GridPane.columnIndex="3" GridPane.rowIndex="1"/>
 
-                                        <Label text="Seat Count" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                        <TextField fx:id="seatCountField" promptText="Seats" styleClass="custom-field"
-                                                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                                    </children>
-                                </GridPane>
+                            <Label text="Seat Count" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <TextField fx:id="seatCountField" promptText="Seats" styleClass="custom-field"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        </children>
+                    </GridPane>
 
-                                <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 20 0 0 0;">
-                                    <children>
-                                        <Button text="Add Section" onAction="#onAddSection" styleClass="primary-btn"/>
-                                        <Button text="Update Section" onAction="#onUpdateSection" styleClass="secondary-btn"/>
-                                        <Button text="Delete Section" onAction="#onDeleteSection" styleClass="danger-btn"/>
-                                    </children>
-                                </HBox>
-                            </children>
-                        </VBox>
-                    </children>
-                </VBox>
-            </content>
-        </ScrollPane>
+                    <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 20 0 0 0;">
+                        <children>
+                            <Button text="Add Section" onAction="#onAddSection" styleClass="primary-btn"/>
+                            <Button text="Update Section" onAction="#onUpdateSection" styleClass="secondary-btn"/>
+                            <Button text="Delete Section" onAction="#onDeleteSection" styleClass="danger-btn"/>
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
+
+        </VBox>
     </center>
 </BorderPane>
